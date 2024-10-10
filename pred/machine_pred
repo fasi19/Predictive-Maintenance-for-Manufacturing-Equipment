@@ -1,0 +1,24 @@
+import streamlit as st
+import numpy as np
+import pickle
+model=pickle.load(open(r"C:\\Users\\Mohammad Fasi Ahmed\Desktop\\pred\\machine_pred.pkl","rb"))
+st.title("Smart Predictive Maintaince Model")
+st.write("this tool predicts machine failure based on input features")
+type_ = st.selectbox('Select Machine Type', [1, 2, 3]) 
+air_temp = st.slider('Air Temperature [K]', 290.0, 320.0, step=0.1)
+process_temp = st.slider('Process Temperature [K]', 290.0, 320.0, step=0.1)
+rotational_speed = st.number_input('Rotational Speed [rpm]', min_value=1000, max_value=3000, step=100)
+torque = st.number_input('Torque [Nm]', min_value=0.0, max_value=100.0, step=1.0)
+tool_wear = st.number_input('Tool Wear [min]', min_value=0, max_value=300, step=10)
+if st.button('Predict Machine Failure'):
+  
+    input_data = np.array([[type_, air_temp, process_temp, rotational_speed, torque, tool_wear]])
+    
+ 
+    prediction = model.predict(input_data)
+    
+   
+    if prediction[0] == 1:
+        st.error('The machine is likely to fail.')
+    else:
+        st.success('The machine is not likely to fail.')
